@@ -11,6 +11,7 @@ import { clamp, dist2, Pool } from './util.js';
 enum GameState {
   LOADING,
   TITLE,
+  STORY_INTRO,
   PLAYING,
   PAUSED,
   GAME_OVER
@@ -67,6 +68,7 @@ export class Game {
   private difficulty: number = 0;
   private seed: number;
   private highContrast: boolean = false;
+  private storyTimer: number = 0;
   
   private readonly TILE_SIZE = 10;
   private readonly CANVAS_WIDTH = 320;
@@ -198,6 +200,9 @@ export class Game {
       case GameState.TITLE:
         this.updateTitle();
         break;
+      case GameState.STORY_INTRO:
+        this.updateStoryIntro(dt);
+        break;
       case GameState.PLAYING:
         this.updateGame(dt);
         break;
@@ -213,10 +218,22 @@ export class Game {
   }
 
   private updateTitle(): void {
-    // Any key to start
+    // Any key to start story intro
     if (this.input.state.left || this.input.state.right || this.input.state.up || 
         this.input.state.down || this.input.state.dash || this.input.state.luck || 
         this.input.state.meow) {
+      this.state = GameState.STORY_INTRO;
+      this.storyTimer = 0;
+    }
+  }
+
+  private updateStoryIntro(dt: number): void {
+    this.storyTimer += dt;
+    
+    // Skip to game after showing story
+    if (this.storyTimer > 16 || this.input.state.left || this.input.state.right || 
+        this.input.state.up || this.input.state.down || this.input.state.dash || 
+        this.input.state.luck || this.input.state.meow) {
       this.startGame();
     }
   }
@@ -629,6 +646,9 @@ export class Game {
         break;
       case GameState.TITLE:
         this.ui.drawTitleScreen(this.CANVAS_WIDTH, this.CANVAS_HEIGHT, this.seed);
+        break;
+      case GameState.STORY_INTRO:
+        this.ui.drawStoryIntro(this.CANVAS_WIDTH, this.CANVAS_HEIGHT, this.storyTimer);
         break;
       case GameState.PLAYING:
         this.renderGame();
