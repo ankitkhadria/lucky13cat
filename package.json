@@ -1,0 +1,33 @@
+{
+  "name": "nine-lives-shadow-alley",
+  "version": "1.0.0",
+  "description": "JS13kGames entry: A black cat stealth game with nine lives and luck mechanics",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/dev-server.mjs",
+    "build": "node tools/build.mjs",
+    "zip": "node tools/build.mjs && cd dist && zip -9 game.zip index.html",
+    "size": "node tools/size-check.mjs",
+    "release": "npm run build && npm run zip && npm run size",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.0",
+    "terser": "^5.20.0",
+    "html-minifier-terser": "^7.2.0",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "js13kgames",
+    "game",
+    "black-cat",
+    "stealth",
+    "procedural"
+  ],
+  "author": "JS13kGames Entry",
+  "license": "MIT"
+}
